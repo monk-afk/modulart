@@ -64,6 +64,7 @@ When Z = 5, or 6, or 7, the pattern of y is:
 
 "alternating between adding 4 and 6 to the number before the current position"
 
+```
 Z:6 n:48  x:75.5   y:4
 Z:6 n:120 x:185.5  y:12 -- add 4 to previous number
 Z:6 n:168 x:258.5  y:8  -- add 6 to previous number
@@ -72,6 +73,7 @@ Z:6 n:360 x:549.5  y:12 -- etc
 Z:6 n:528 x:803.5  y:28
 Z:6 n:624 x:948.5  y:16
 Z:6 n:840 x:1274.5 y:36
+```
 
 When Z = 8, `y = (y + 1)`
 
