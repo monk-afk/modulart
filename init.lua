@@ -1,57 +1,73 @@
 -- init.lua
-local function sample_mod_phi(step_size_end, max_step_count)
-  local data = {
-    [0] = {"Z", "c", "n", "x", "Ln", "Lx", "y"}
-  }
+local function sample_mod_phi(max_width, max_height, Z)
+  local file = io.open("data/mod_phi.data", "a+")
 
-  for Z = 1, step_size_end do
-    local c = 0  -- number of times we encounter x.5
-    local y = 0  -- steps between x.5
-    data[Z] = {}
+  local math_sqrt = math.sqrt
+  local math_abs = math.abs
 
-    for n = 0, max_step_count, Z do
-      y = y + 1
+  local function get_x(n)
+    return math_abs(
+        (n + math_sqrt(1 + n)) / 2 + n
+      ) % 1 == 0.5
+  end
 
-      local x = (n + math.sqrt(1 + n)) / 2 + n  -- incremental phi variation
+  local data = {}
+  local table_concat = table.concat
+  local table_insert = table.insert
+  local string_sub = string.sub
 
-      if math.abs(x) % 0.5 == 0 then
-        local Ln = tostring(n):sub(-1) -- the last digit of n
-        local Lx = tostring(x):sub(-3,-3) -- the last integer of x.5
-        c = c + 1
+  for layer = 1, max_height do
+    Z = Z + 1
+    for n = 0, math.huge, Z do
 
-        data[Z][c] = {Z, c, n, x, Ln, Lx, y}
+      if get_x(n) then
+        table_insert(data, string_sub(tostring(n - 0.5), -3, -3))
+      end
 
-        y = 0
+      if #data == max_width then
+        break 
+      end
+
+    end
+
+    file:write(table_concat(data), "\n"):flush()
+
+    for k = 1, #data do data[k] = nil end
+
+    if not dofile("signal.lua") then break end
+  end
+  file:close()
+
+  return dofile("pixmap.lua")
+end
+
+
+local function init(arg)
+  local max_width
+  local max_height = arg and tonumber(arg[2]) or 8100
+
+  local Z = 0
+  local data = io.open("data/mod_phi.data", "r")
+  if data then
+    for line in data:lines() do
+      Z = Z + 1
+      if not max_width then
+        max_width = #line
       end
     end
+    data:close()
   end
-  return data
+
+  if not max_width then
+    max_width = arg and tonumber(arg[1]) or 80
+  end
+
+  io.open("signal.lua", "w"):write("return true"):close()
+
+  return sample_mod_phi(max_width, max_height, Z)
 end
 
-
-local frame_multiplier = 1 -- to generate symmetrical pixmap (anything over 3 takes a long time)
-local step_size_end = 9 * (4 ^ frame_multiplier)
-local max_step_count = 8100 * (4 ^ (2 * frame_multiplier))
-
-local data = sample_mod_phi(step_size_end, max_step_count)
-
-io.write(
-  table.concat(data[0], "\t"), "\n")
-
-for step_size = 1, #data do
-  local step_data = data[step_size]
-
-  for step = 1, #step_data do
-    io.write(
-      table.concat(step_data[step], "\t"), "\n")
-  end
-end
-io.stdout:flush()
-
--- uncomment to generate images
--- dofile("pixmap.lua")(data)
--- dofile("gnuplot.lua")(data)
-
+return init(arg)
 
 
 
