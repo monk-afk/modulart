@@ -1,75 +1,52 @@
 -- init.lua
 local function sample_mod_phi(max_width, max_height, Z)
-  local file = io.open("data/mod_phi.data", "a+")
+  local sqrt = math.sqrt
+  local abs = math.abs
+  local log10 = math.log10
+  local insert = table.insert
+  local sub = string.sub
+  local draw = dofile("pixmap.lua")(max_width, max_height)
 
-  local math_sqrt = math.sqrt
-  local math_abs = math.abs
+  local color_keys = {}
 
-  local function get_x(n)
-    return math_abs(
-        (n + math_sqrt(1 + n)) / 2 + n
-      ) % 1 == 0.5
+  local function phi_variant(n)
+    local n = abs(log10(n + sqrt(n + 1)) / 2 + n)
+    local i = n % 1
+    return n - i * i
   end
-
-  local data = {}
-  local table_concat = table.concat
-  local table_insert = table.insert
-  local string_sub = string.sub
 
   for layer = 1, max_height do
-    Z = Z + 1
-    for n = 0, math.huge, Z do
-
-      if get_x(n) then
-        table_insert(data, string_sub(tostring(n - 0.5), -3, -3))
+    for n = 0, math.huge, layer do
+      local nchar = tostring(phi_variant(n))
+      if nchar then
+        insert(color_keys, {
+            sub(nchar, -3, -3),
+            sub(nchar, -2, -2),
+            sub(nchar, -4, -4)
+        })
       end
 
-      if #data == max_width then
+      if #color_keys == max_width then
+        color_keys = draw(color_keys)
         break 
       end
-
     end
-
-    file:write(table_concat(data), "\n"):flush()
-
-    for k = 1, #data do data[k] = nil end
-
     if not dofile("signal.lua") then break end
   end
-  file:close()
-
-  return dofile("pixmap.lua")
+  return draw(false) -- false will close the ppm file
 end
 
 
 local function init(arg)
-  local max_width
+  local max_width = arg and tonumber(arg[1]) or 80
   local max_height = arg and tonumber(arg[2]) or 8100
 
-  local Z = 0
-  local data = io.open("data/mod_phi.data", "r")
-  if data then
-    for line in data:lines() do
-      Z = Z + 1
-      if not max_width then
-        max_width = #line
-      end
-    end
-    data:close()
-  end
-
-  if not max_width then
-    max_width = arg and tonumber(arg[1]) or 80
-  end
-
-  io.open("signal.lua", "w"):write("return true"):close()
-
-  return sample_mod_phi(max_width, max_height, Z)
+  return sample_mod_phi(max_width, max_height)
 end
 
+io.open("signal.lua", "w"):write("return true"):close()
+
 return init(arg)
-
-
 
 ------------------------------------------------------------------------------------
 -- MIT License                                                                    --

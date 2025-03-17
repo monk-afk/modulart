@@ -1,6 +1,7 @@
 -- gnuplot.lua
+-- This needs to be re-written to support new init.lua which doesn't write to file.data
 local function plot_graph(data)
-  local data_file = "mod_phi_gnuplot.data"
+  local data_file = "data/mod_phi.data"
 
   if data then
     local file = io.open(data_file, "w")
@@ -17,7 +18,6 @@ local function plot_graph(data)
     file:close()
   end
 
-  -- {"Z", "c", "n", "x", "Ln", "Lx", "y"}
   local exe_cute = [[
     gnuplot -e "set terminal pngcairo background '#000000' size 1600, 900;\
       set output 'y_frequency_plot.png';\
@@ -36,16 +36,13 @@ local function plot_graph(data)
       set isosamples 60;\
       unset view;\
       plot
-        '< cat ]] .. data_file .. [[' using 7 axes x1y1 lt 0 lc rgb '0x00FF00' with p"\
+        '< cat ]] .. data_file .. [[' using 1 axes x1y1 lt 0 lc rgb '0x00FF00' with p"\
     ]]
   os.execute(exe_cute)
 end
 
 -- can run without re-calculating data, just run `$ gnuplot.lua foo` to trigger condition
-return arg[1] and plot_graph() or plot_graph
-
-
-
+-- return arg[1] and plot_graph() or plot_graph
 
 ------------------------------------------------------------------------------------
 -- MIT License                                                                    --

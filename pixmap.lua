@@ -1,42 +1,54 @@
 -- pixmap.lua
-local function generate_image()
-  local colors = {}
-  for n = 1, 10 do
-    local c = math.floor(23 * n)
-    table.insert(colors, {c, 0, 0}) -- red gradient
-  end
-
-  local function to_rgb(value)
-    return table.unpack(colors[value+1] or {0, 0, 0})
-  end
-
-  local img_width
-  local img_height = 0
-
-  for line in io.lines("data/mod_phi.data") do
-    if not img_width then img_width = #line end
-    img_height = img_height + 1
-  end
-
-  local img_file = io.open("temp.ppm", "wb")
+local function generate_image(img_width, img_height)
+  local file_dir = string.format("./images/phivar_new_%s", os.time())
+  local img_file = io.open(file_dir, "wb")
   img_file:write("P6\n", img_width, " ", img_height, "\n255\n")
 
-  for line in io.lines("data/mod_phi.data") do
-    for c = 1, #line do
-      local d = tonumber(string.sub(line,c,c))
-      local r, g, b = to_rgb(d)
-      img_file:write(string.char(r,g,b))
-    end
+  local rgb_map = {}
+  -- for n = 0,9 do  -- if the image is too saturated, reverse mapping order
+  for n = 9,0,-1 do
+    local c = 16 * (n+1)
+    rgb_map[tostring(n)] = c
+    --[[
+      [9] = 160,
+      [8] = 144,
+      [7] = 128,
+      [6] = 112,
+      [5] = 96,
+      [4] = 80,
+      [3] = 64,
+      [2] = 48,
+      [1] = 32,
+      [0] = 16,
+    ]]
   end
 
-  img_file:close()
-  -- os.execute("viewnior temp.ppm")
+  return function(color_keys)
+    if not color_keys then
+      return img_file:close()
+    end
+
+    for c = 1, #color_keys do
+      local keys = color_keys[c]
+      if type(keys) ~= "table" then
+        error("Invalid color_keys format")
+      end
+
+      local r = rgb_map[keys[1]] or 0
+      local g = rgb_map[keys[2]] or 0
+      local b = rgb_map[keys[3]] or 0
+
+      -- Values can be modified to adjust:
+      -- local g = math.ceil((rgb_map[keys[2]] or 0) / 2) -- halves the value of Green
+
+      img_file:write(string.char(r, g, b))
+      color_keys[c] = nil
+    end
+    return color_keys
+  end
 end
 
-return generate_image()
-
-
-
+return generate_image
 
 ------------------------------------------------------------------------------------
 -- MIT License                                                                    --

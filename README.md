@@ -6,11 +6,13 @@ By iteratively incrementing n in the formula:
 
 > x = (n + √(n + 1)) / (n + 2)
 
-Unique patterns can be observed when we sample x values ending in 'x.5'.
+Unique patterns can be observed when we sample digits and apply them to a RGB map.
 
-![images/mod_phi.png](images/mod_phi.png)
+Included with this repo is a Lua implemenation of Phi Variance and observed from explored curiosities.
 
-Included with this repo is a Lua implemenation of (n + √(n + 1)) / (n + 2)
+[Gallery](/GALLERY.md)
+
+<img src="./images/phivar_mid_section_closeup_full_color.png" alt="images/phivar mid section closeup full color" width="512"/>
 
 ___
 
@@ -20,19 +22,81 @@ Run init.lua from terminal, optionally with arguments for width and height:
 
 > `$ lua init.lua [width] [height]
 
-It will create a file in the data folder, each line of this file represents the step size.
+Images generated will be placed into images folder, each dated with Unix timestamp.
 
-The function can be gracefully terminated, allowing it to finish its current iteration.
+___
 
-Replace the return value in `signal.lua` to `false` or `nil` and it will halt the process.
+Update March 17, 2025: I changed the sampling method. The old files are now in the `archive` folder.
 
-The init.lua file will always check for an existing `mod_phi.data` file, and resume from the last recorded step size and max step count.
+## Log10
 
-Resuming from file will always take precedence over command argument for the `maximum width`.
+A slight adjustment was made to the original Phi variant function:
 
-It is perfectly fine to change the `maximum height`.
+```lua
+  local function phi_variant(n)
+    local n = math_abs(math_log10(n + math_sqrt(n + 1)) / 2 + n)
+    local i = n % 1
+    return n - i * i
+  end
+```
 
-**Note:** old_init.lua is compatible only with gnuplot.lua. Additionally, init.lua is only compatible with pixmap.lua.
+And instead of occurrences of 0.5, we now sample all values:
+
+```lua
+  local n = phi_variant(n)
+    table_insert(colors, {
+        string_sub(tostring(n), -3, -3),
+        string_sub(tostring(n), -2, -2),
+        string_sub(tostring(n), -1, -1)
+    })
+```
+
+To elaborate, if phi_variant = 1234.56789, then we capture 7, 8, 9.
+
+The captured numbers become index keys from a RGB map to render the images.
+
+```lua
+  local function phi_variant(n)
+    local n = abs(log10(n + sqrt(n + 1)) / 2 + n)
+    local i = n % 1
+    return n-i * i
+  end
+```
+
+this function, which increments `n` during a loop, is the phi golden formula with incremental values in the square and division part. 
+the log10 is applied and then absolute value.
+`n % 1` gets the decimal from `n`, then we substract it from `n` and multiply by `n`
+
+in the inner loop, 
+
+```lua
+  local n = phi_variant(n)
+  if n then
+    local nchar = tostring(n)
+    insert(color_keys, {
+        sub(nchar, -3, -3),
+        sub(nchar, -2, -2),
+        sub(nchar, -4, -4)
+    })
+  end
+```
+
+after retreiving the value of `n`, we use sub to pick the digit of `n` of the sub(). In Lua indexes start at 1, so `-2` is the second from last digit.
+These digits each represent an RGB color, for each row is R or G or B respectively.
+To colorize the pixel, the gradient map is:
+
+```lua
+  for n = 9,0,-1 do
+    local c = 16 * (n+1)
+    rgb_map[tostring(n)] = c
+  end
+```
+This gives us 10 colors. The digit of each row become a colored pixel.
+
+
+___
+
+Archived
 
 ___
 
