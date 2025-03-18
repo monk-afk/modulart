@@ -4,7 +4,11 @@ We have discovered the underlying cause of the patterns observed in this reposit
 
 Removed from all calculation, sampling via sequential pattern from numbers appearing in a sequence is inevitably going to create patterns. This is quite obvious now in hindsight.
 
-The sample method uses an incremental step size, which is `(N + 1) + N`.
+The sample method uses an incremental step size, which is:
+
+```math
+$$ n_{k+1} = n_k + \text{step\_size}, \quad n_0 = 0 $$
+```
 
 Using a nested loop, we increment the step size with the outer loop, and the inner loop takes the steps for sampling.
 
