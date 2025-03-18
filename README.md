@@ -1,32 +1,69 @@
-# Modular Sampling of Incremental Phi Variation
+# Modular Sampling of Incremental Step Size
 
-The modular sampling behavior of a golden ratio (phi) variation.
+We have discovered the underlying cause of the patterns observed in this repository are directly related to the method of sampling the data.
 
-By iteratively incrementing n in the formula:
+Removed from all calculation, sampling via sequential pattern from numbers appearing in a sequence is inevitably going to create patterns. This is quite obvious now in hindsight.
 
-> x = (n + √(n + 1)) / (n + 2)
+The sample method uses an incremental step size, which is `(N + 1) + N`.
 
-Unique patterns can be observed when we sample digits and apply them to a RGB map.
+Using a nested loop, we increment the step size with the outer loop, and the inner loop takes the steps for sampling.
 
-Included with this repo is a Lua implemenation of Phi Variance and observed from explored curiosities.
+Each sampled digit will create a uniqe frequency. For example, sampling the last digit produces:
 
-[Gallery](/GALLERY.md)
+<img src="./images/phivar_first_digit_20250318095710.png" alt="./images/phivar_first_digit_20250318095710.png" width="128"/>
 
-<img src="./images/phivar_mid_section_closeup_full_color.png" alt="images/phivar mid section closeup full color" width="512"/>
+And sampling the third from last position creates:
+
+<img src="./images/modart_20250318102533.png" alt="./images/modart_20250318102533.png" width="256"/>
+
+An example of the differences between each sample position can be seen here: [sample positions](./images/sample_position/README.md)
+
+Applying various mathematical formulas will influence the images generated. Some do not, or the correct parameters haven't been found. For example, using a cosine wave funcion on the modular sampling requires a sample rate of 0.01 to produce an image with visual details, otherwise it is indistinguishable from static noise.
+
+Phi Variance: `abs(log10((n + √(n + 1)) / (n + 2)))`
+<img src="./images/modart_20250318103717.png" alt="images/modart 20250318103717" width="512"/>
+
+Additional images will be added to the [Gallery](/GALLERY.md)
 
 ___
 
 ## How to
 
-Run init.lua from terminal, optionally with arguments for width and height:
+Run init.lua from terminal with parameters:
 
-> `$ lua init.lua [width] [height]
+> `$ lua init.lua w=1024 h=1024 r=1 g=2 b=-3
 
-Images generated will be placed into images folder, each dated with Unix timestamp.
+Options are:
+
+```
+  --help        Show the help message
+  --height, -h  The height of the image in pixels
+  --width, -w   The width of the image in pixels
+  -r, -g, -b    Changes the position of the sampled digit of the RGB map
+```
+
+The r, g, and b parameters select the position of the digit being sampled, and in turn changes the color of the pixel of its corresponding channel. Negative numbers will select from the end (right), and positive argument will select from the start (left). For example:
+
+```
+Red channel, 3rd from end, r=-3
+  123423453456
+           ^
+Green channel, 4th from start, g=4
+  123423453456
+     ^
+Blue channel, 2nd from end, b=-2
+  123423453456
+            ^
+```
+
+Images generated can be found in `images/new/`, and will be in `.ppm` format.
 
 ___
+___
 
-Update March 17, 2025: I changed the sampling method. The old files are now in the `archive` folder.
+Previous Research and Experimentation:
+
+___
 
 ## Log10
 
@@ -95,12 +132,11 @@ This gives us 10 colors. The digit of each row become a colored pixel.
 
 
 ___
-
-Archived
-
 ___
 
-## Frequency of x.5 depends on step size
+## Initial curiosity and observations:
+
+### Frequency of x.5 depends on step size
 
 By increasing the step size (Z) of (n), x.5 can be found at different intervals.
 

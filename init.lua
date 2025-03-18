@@ -1,52 +1,46 @@
 -- init.lua
-local function sample_mod_phi(max_width, max_height, Z)
-  local sqrt = math.sqrt
-  local abs = math.abs
-  local log10 = math.log10
+local function sample_mod_phi(max_width, max_height, r, g, b)
   local insert = table.insert
   local sub = string.sub
   local draw = dofile("pixmap.lua")(max_width, max_height)
 
   local color_keys = {}
 
-  local function phi_variant(n)
-    local n = abs(log10(n + sqrt(n + 1)) / 2 + n)
-    local i = n % 1
-    return n - i * i
-  end
-
-  for layer = 1, max_height do
-    for n = 0, math.huge, layer do
-      local nchar = tostring(phi_variant(n))
-      if nchar then
+  for step_size = 1, max_height do
+    for n = 0, math.huge, step_size do
         insert(color_keys, {
-            sub(nchar, -3, -3),
-            sub(nchar, -2, -2),
-            sub(nchar, -4, -4)
+            sub(n, r, r),
+            sub(n, g, g),
+            sub(n, b, b)
         })
-      end
-
       if #color_keys == max_width then
         color_keys = draw(color_keys)
         break 
       end
     end
-    if not dofile("signal.lua") then break end
   end
   return draw(false) -- false will close the ppm file
 end
 
 
-local function init(arg)
-  local max_width = arg and tonumber(arg[1]) or 80
-  local max_height = arg and tonumber(arg[2]) or 8100
+local function init(clip)
+  local max_width = tonumber(clip.w or clip.width) or 500
+  local max_height = tonumber(clip.h or clip.height) or max_width
+  local r = tonumber(clip.r) or tonumber(clip.red)   or -3
+  local g = tonumber(clip.g) or tonumber(clip.green) or -3
+  local b = tonumber(clip.b) or tonumber(clip.blue)  or -3
 
-  return sample_mod_phi(max_width, max_height)
+  sample_mod_phi(max_width, max_height, r, g, b)
 end
 
-io.open("signal.lua", "w"):write("return true"):close()
 
-return init(arg)
+local clip = dofile("clip.lua")
+
+if clip.help then
+  dofile("help.lua")
+else
+  init(clip)
+end
 
 ------------------------------------------------------------------------------------
 -- MIT License                                                                    --

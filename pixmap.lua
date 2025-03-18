@@ -1,25 +1,25 @@
 -- pixmap.lua
 local function generate_image(img_width, img_height)
-  local file_dir = string.format("./images/phivar_new_%s", os.time())
+  local file_dir = string.format("./images/new/modart_%s.ppm", os.date("%Y%m%d%H%M%S"))
   local img_file = io.open(file_dir, "wb")
   img_file:write("P6\n", img_width, " ", img_height, "\n255\n")
 
   local rgb_map = {}
   -- for n = 0,9 do  -- if the image is too saturated, reverse mapping order
   for n = 9,0,-1 do
-    local c = 16 * (n+1)
+    local c = 25 * (n+1)
     rgb_map[tostring(n)] = c
     --[[
-      [9] = 160,
-      [8] = 144,
-      [7] = 128,
-      [6] = 112,
-      [5] = 96,
-      [4] = 80,
-      [3] = 64,
-      [2] = 48,
-      [1] = 32,
-      [0] = 16,
+      [9] = 250,
+      [8] = 225,
+      [7] = 200,
+      [6] = 175,
+      [5] = 150,
+      [4] = 125,
+      [3] = 100,
+      [2] = 75,
+      [1] = 50,
+      [0] = 25,
     ]]
   end
 
@@ -38,7 +38,7 @@ local function generate_image(img_width, img_height)
       local g = rgb_map[keys[2]] or 0
       local b = rgb_map[keys[3]] or 0
 
-      -- Values can be modified to adjust:
+      -- Can be modified to adjust color value:
       -- local g = math.ceil((rgb_map[keys[2]] or 0) / 2) -- halves the value of Green
 
       img_file:write(string.char(r, g, b))

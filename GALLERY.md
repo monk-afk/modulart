@@ -1,18 +1,34 @@
 # Image Gallery 
 
-For reference, 'RGB code' describes Nth digit of the product of `phi_variance(n)`.
+___
 
-Eg;
-  - `R-3`: Red is using `n:sub(-3,-3)`; that is, third digit from end
-  - `B2`: Blue is using `n:sub(2, 2)`; second digit from beginning
-
-If the color was adjusted, it will be noted. Otherwise, images are generated with a linear color scheme, where black is 
+<a href="./images/modart_20250318140911.png"><img src="./images/modart_20250318140911.png" alt="./images/modart_20250318140911.png" width="512"/></a>
 
 ___
 
-## The eyes, `(R-3,G-2,B-4)`
+<a href="./images/phivar_20250318002129.png"><img src="./images/phivar_20250318002129.png" alt="./images/phivar_20250318002129.png" width="512"/></a>
+
+___
+
+<a href="./images/phivar_cossin_20250318093417.png"><img src="./images/phivar_cossin_20250318093417.png" alt="./images/phivar_cossin_20250318093417.png" width="512"/></a>
+
+___
+
+<a href="./images/phivar_adjusted-sample-rate_20250318093558.png"><img src="./images/phivar_adjusted-sample-rate_20250318093558.png" alt="./images/phivar_adjusted-sample-rate_20250318093558.png" width="512"/></a>
+
+___
+
+<a href="./images/phivar_20250318081232-3.370269.png"><img src="./images/phivar_20250318081232-3.370269.png" alt="./images/phivar_20250318081232-3.370269.png" width="512"/></a>
+
+___
+
+<a href="./images/phivar_20250318031313.png"><img src="./images/phivar_20250318031313.png" alt="./images/phivar_20250318031313.png" width="512"/></a>
+
+___
 
 <a href="./images/phivar_mid_section_closeup_full_color.png"><img src="./images/phivar_mid_section_closeup_full_color.png" alt="images/phivar mid section closeup full color" width="512"/></a>
+
+___
 
 <a href="./images/phivar_mid_section_full_color.png"><img src="./images/phivar_mid_section_full_color.png" alt="images/phivar_mid_section_full_color.png" width="512"/></a>
 
@@ -20,15 +36,19 @@ ___
 
 <a href="./images/phivar_perspective.png"><img src="./images/phivar_perspective.png" alt="images/phivar_perspective.png" width="512"/></a>
 
-
-## Banded Stars, `(R-3,G-2,B-4)`
+___
 
 <a href="./images/phivar_top_band_closeup_full_color.png"><img src="./images/phivar_top_band_closeup_full_color.png" alt="images/phivar_top_band_closeup_full_color.png" width="512"/></a>
 
-## Full Red, Half Green, Half Blue, `(R-3,G-2,B-4)`
+___
 
 <a href="./images/phivar_full-r_half-GB_R3G2B4.png"><img src="./images/phivar_full-r_half-GB_R3G2B4.png" alt="images/phivar_full-r_half-GB_R3G2B4.png" width="512"/></a>
 
+> Zooming in on the blue band reveals self-similarity:
+
+<a href="./images/phivar_full-r_half-GB_R3G2B4_closeup.png"><img src="./images/phivar_full-r_half-GB_R3G2B4_closeup.png" alt="images/phivar_full-r_half-GB_R3G2B4_closeup.png" width="512"/></a>
+
+___
 
 ```lua
 
