@@ -16,7 +16,7 @@ And sampling the third from last position creates:
 
 <img src="./images/modart_20250318102533.png" alt="./images/modart_20250318102533.png" width="256"/>
 
-An example of the differences between each sample position can be seen here: [sample positions](./images/sample_position/README.md)
+An example of the differences between each sample position can be seen here: [sample positions](./images/position_sample/README.md)
 
 Applying various mathematical formulas will influence the images generated. Some do not, or the correct parameters haven't been found. For example, using a cosine wave funcion on the modular sampling requires a sample rate of 0.01 to produce an image with visual details, otherwise it is indistinguishable from static noise.
 
