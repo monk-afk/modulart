@@ -1,5 +1,22 @@
 # Image Gallery 
 
+
+These two images show the difference between iteration using different step sizes. Each image created from the sampled digit at the 4th position.
+
+
+
+> Unmodified Step Size; `for step = 1, max_height do`
+
+<a href="./images/modart_4_nc.png"><img src="./images/modart_4_nc.png" alt="modart 4 nc" width="500"/></a>
+
+> Fibonacci Step Size; `for step = 1, (max_height * 1.6180339887499), 1.6180339887499 do`
+
+<a href="./images/modart_4_fibonacci.png"><img src="./images/modart_4_fibonacci.png" alt="modart 4 fibonacci" width="500"/></a>
+
+> Pi Step Size; `for step = 1, (max_height * math.pi), math.pi do`
+
+<a href="./images/modart_4_pi.png"><img src="./images/modart_4_pi.png" alt="modart 4 pi" width="500"/></a>
+
 ___
 
 <a href="./images/modart_20250318140911.png"><img src="./images/modart_20250318140911.png" alt="./images/modart_20250318140911.png" width="512"/></a>
